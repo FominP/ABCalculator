@@ -22,7 +22,7 @@
 ## 🖥️ Демо
 
 Приложение развёрнуто на платформе **Amvera** и доступно по адресу:  
-👉 [https://abcalculator.amvera.io](https://abcalculator.amvera.io) (замените на актуальный URL после деплоя)
+👉 https://abcalculator-fominpavel243.amvera.io/
 
 ## 🛠 Установка и локальный запуск
 
