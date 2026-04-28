@@ -1,0 +1,85 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A/B Калькулятор статистических тестов</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Пользовательские стили -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-light">
+    <div class="container mt-4 mb-5">
+        <h1 class="mb-3 text-center">📊 Калькулятор A/B-тестов</h1>
+        <p class="text-muted text-center">Выберите тип теста, введите параметры и получите результат.</p>
+
+        <!-- Выбор теста -->
+        <div class="mb-4">
+            <label for="testType" class="form-label fw-semibold">Тип теста</label>
+            <select id="testType" class="form-select">
+                <option value="z_proportions">Z-тест для пропорций</option>
+                <option value="t_means">T-тест Уэлча (средние)</option>
+                <option value="chi_square">Хи-квадрат (таблица 2×2)</option>
+                <option value="srm">Проверка SRM</option>
+                <option value="mde">MDE (минимально детектируемый эффект)</option>
+            </select>
+            <div id="testDescription" class="form-text mt-1"></div>
+        </div>
+
+        <!-- Динамические поля ввода -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header fw-bold">Параметры теста</div>
+            <div class="card-body" id="dynamicFields">
+                <!-- поля будут вставлены через JS -->
+            </div>
+            <div class="card-footer d-flex gap-2 flex-wrap">
+                <button id="calculateBtn" class="btn btn-primary">
+                    <span id="calcSpinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                    Рассчитать
+                </button>
+                <button id="exampleBtn" class="btn btn-outline-secondary">Заполнить пример</button>
+                <button id="resetBtn" class="btn btn-outline-danger btn-sm ms-auto">Сброс</button>
+            </div>
+        </div>
+
+        <!-- Блок результатов -->
+        <div id="resultCard" class="card shadow-sm mt-3 d-none">
+            <div class="card-header fw-bold">Результат</div>
+            <div class="card-body" id="resultBody"></div>
+            <div class="card-footer">
+                <button id="copyBtn" class="btn btn-outline-primary btn-sm">📋 Скопировать результат</button>
+            </div>
+        </div>
+
+        <!-- Контейнер для графика -->
+        <div id="chartContainer" class="mt-4 d-none">
+            <div class="card shadow-sm">
+                <div class="card-header fw-bold">Визуализация</div>
+                <div class="card-body">
+                    <canvas id="resultChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ошибки (если возникнут) -->
+        <div id="errorAlert" class="alert alert-danger mt-3 d-none" role="alert"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white py-3 border-top text-center text-muted small">
+        <p class="mb-0">
+            Создано с использованием <a href="https://github.com/FominP/ABProject" target="_blank" rel="noopener noreferrer">
+                ab_test_analyzer</a>. Код приложения доступен для свободного использования.
+        </p>
+    </footer>
+
+    <!-- Bootstrap JS (необходим для интерактивности, но здесь не используется сильно) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Основная логика -->
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
