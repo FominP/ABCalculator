@@ -1,5 +1,0 @@
-flask>=2.0
-ab_test_analyzer>=0.1.3
-numpy
-scipy>=1.0
-gunicorn

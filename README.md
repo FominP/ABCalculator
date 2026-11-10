@@ -1,86 +1,99 @@
-# 📊 A/B Test Calculator
+# Experiment Lab
 
-Веб-калькулятор статистических тестов на Flask для A/B-тестирования.  
-Использует Python-библиотеку [`ab_test_analyzer`](https://github.com/FominP/ABProject).
+A privacy-first, browser-based toolkit for planning and analyzing A/B tests.
 
-## 🚀 Возможности
+[![Test and deploy to GitHub Pages](https://github.com/FominP/ABCalculator/actions/workflows/pages.yml/badge.svg)](https://github.com/FominP/ABCalculator/actions/workflows/pages.yml)
 
-- **Z-тест для пропорций** — сравнение конверсий двух групп.
-- **T-тест Уэлча** — сравнение средних с неравными дисперсиями.
-- **Хи-квадрат тест** — анализ таблицы сопряжённости 2×2.
-- **Проверка SRM (Sample Ratio Mismatch)** — проверка балансировки групп.
-- **MDE (минимально детектируемый эффект)** — расчёт чувствительности теста.
+**Live demo:** [fominp.github.io/ABCalculator](https://fominp.github.io/ABCalculator/)
 
-Для каждого теста:
-- Динамическая форма с полями под выбранный тест.
-- Валидация ввода на клиенте и сервере.
-- Подробный результат: значение статистики, p-value, 95% доверительный интервал, вывод о значимости.
-- Визуализация (бар-чарты или столбцы с накоплением) через Chart.js.
-- Кнопка «Заполнить пример» для быстрого знакомства.
-- Копирование результата в буфер обмена.
+## Why this architecture?
 
-## 🖥️ Демо
+Experiment Lab is a static application. Statistical calculations run in the
+browser, so entered experiment data is never uploaded to a server. This also
+means the project can be hosted on GitHub Pages without a backend, a database,
+or a paid compute plan.
 
-Приложение развёрнуто на платформе **Amvera** и доступно по адресу:  
-👉 https://abcalculator-fominpavel243.amvera.io/
+```text
+Browser
+├── TypeScript statistics engine
+├── Input validation and interpretation
+├── Chart.js visualization
+└── No network request for calculations
 
-## 🛠 Установка и локальный запуск
+GitHub Actions
+├── Install locked dependencies
+├── Run deterministic reference tests
+├── Build the production bundle
+└── Deploy dist/ to GitHub Pages
+```
 
-### Предварительные требования
-- Python 3.8 или выше
-- Git (опционально)
+## Methods
 
-### 1. Клонируйте репозиторий
+- Two-proportion z-test with an effect confidence interval
+- Welch's t-test from summary statistics
+- Pearson chi-square test for a 2×2 table
+- Sample ratio mismatch check
+- Minimum detectable effect for a conversion metric
+
+The UI exposes assumptions and warnings instead of reducing an experiment to a
+single “winner” label. The statistical engine also handles degenerate inputs
+that previously produced `NaN` or server errors.
+
+## Development
+
+Requirements:
+
+- Node.js 24
+- npm 11 or newer
+
 ```bash
 git clone https://github.com/FominP/ABCalculator.git
 cd ABCalculator
+npm ci
+npm run dev
 ```
 
-### 2. Создайте и активируйте виртуальное окружение
-Windows (PowerShell):
-
-```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-```
-Linux / macOS:
+Useful commands:
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+npm test          # Run statistical reference and edge-case tests
+npm run build     # Type-check and create the production bundle
+npm run preview   # Preview the production bundle locally
 ```
 
-### 3. Установите зависимости
-```bash
-pip install -r requirements.txt
-```
-### 4. Запустите приложение
-```bash
-python app.py
-```
-Откройте браузер и перейдите на http://127.0.0.1:5000.
+## Enable GitHub Pages after merging
 
-## 🧱 Структура проекта
-```text
-ABCalculator/
-├── app.py                 # Основное Flask-приложение
-├── requirements.txt       # Зависимости Python
-├── amvera.yml             # Конфигурация деплоя на Amvera
-├── templates/
-│   └── index.html         # Главная страница (Bootstrap 5, Chart.js)
-└── static/
-    ├── style.css          # Дополнительные стили
-    └── script.js          # Клиентская логика (динамические формы, fetch-запросы)
-```
-## 📚 Используемые библиотеки
-- Flask — веб-фреймворк
-- ab_test_analyzer — библиотека статистических тестов
-- NumPy — численные вычисления
-- SciPy — расчёт критических значений распределений
-- Bootstrap 5 — интерфейс
-- Chart.js — графики
+The repository contains a complete deployment workflow in
+`.github/workflows/pages.yml`. The repository owner only needs to enable it once:
 
-Основная логика тестов реализована в [ab_test_analyzer](https://github.com/FominP/ABTestAnalyzer), созданной автором.
+1. Open **Settings → Pages** in the GitHub repository.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+3. Merge the migration pull request into `main`.
+4. Open the **Actions** tab and wait for **Test and deploy to GitHub Pages** to
+   finish successfully.
+5. The application will be available at
+   `https://fominp.github.io/ABCalculator/`.
 
-## 📄 Лицензия
-Этот проект распространяется под лицензией MIT.
+If GitHub Pages was previously configured for a branch or `/docs` folder,
+switching the source to GitHub Actions is required. A custom domain can be added
+later in the same Pages settings screen; the build uses relative asset paths and
+works both under `/ABCalculator/` and at a custom-domain root.
+
+## Statistical implementation
+
+Distribution functions are provided by modular
+[`@stdlib`](https://stdlib.io/) packages. Reference values in the test suite are
+generated from SciPy. The related Python package is maintained separately in
+[`ABTestAnalyzer`](https://github.com/FominP/ABTestAnalyzer).
+
+## Limitations
+
+- Results assume independent observations and correctly aggregated inputs.
+- The proportion confidence interval and MDE use normal approximations.
+- Small expected counts can make Pearson's chi-square approximation unreliable;
+  the application surfaces a warning in this case.
+- Statistical evidence is not the same as practical or business significance.
+
+## License
+
+[MIT](LICENSE) © 2026 Pavel Fomin

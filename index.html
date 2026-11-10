@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Plan and analyze A/B tests with transparent, privacy-first statistical calculations."
+    />
+    <meta name="theme-color" content="#101828" />
+    <title>Experiment Lab — A/B Test Calculator</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Experiment Lab home">
+        <span class="brand-mark" aria-hidden="true">E</span>
+        <span>Experiment Lab</span>
+      </a>
+      <a
+        class="header-link"
+        href="https://github.com/FominP/ABCalculator"
+        target="_blank"
+        rel="noreferrer"
+      >
+        View source <span aria-hidden="true">↗</span>
+      </a>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">A/B testing toolkit</div>
+        <h1>Make experiment decisions with the assumptions visible.</h1>
+        <p>
+          Plan sample sensitivity, check allocation quality, and estimate treatment
+          effects. Every calculation runs locally in your browser.
+        </p>
+        <div class="hero-badges" aria-label="Product characteristics">
+          <span>No uploads</span>
+          <span>Open source</span>
+          <span>Transparent methods</span>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Experiment calculator">
+        <form id="calculatorForm" class="panel input-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="step-label">Configure</span>
+              <h2>Experiment inputs</h2>
+            </div>
+            <button id="exampleButton" class="text-button" type="button">Use example</button>
+          </div>
+
+          <label class="field-label" for="testType">Analysis</label>
+          <select id="testType" class="select-control">
+            <option value="z_proportions">Two-proportion z-test</option>
+            <option value="t_means">Welch’s t-test</option>
+            <option value="chi_square">Chi-square test (2×2)</option>
+            <option value="srm">Sample ratio mismatch</option>
+            <option value="mde">Minimum detectable effect</option>
+          </select>
+          <p id="testDescription" class="field-description"></p>
+
+          <div id="dynamicFields" class="field-grid"></div>
+
+          <div class="form-actions">
+            <button class="primary-button" type="submit">Analyze experiment</button>
+            <button id="resetButton" class="secondary-button" type="button">Reset</button>
+          </div>
+          <div id="errorAlert" class="error-alert" role="alert" hidden></div>
+        </form>
+
+        <section id="resultPanel" class="panel result-panel empty-state" aria-live="polite">
+          <div id="emptyResult">
+            <div class="empty-visual" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+            <h2>Your analysis will appear here</h2>
+            <p>Select a method, enter experiment data, and run the analysis.</p>
+          </div>
+
+          <div id="analysisResult" hidden>
+            <div class="panel-heading result-heading">
+              <div>
+                <span class="step-label">Interpret</span>
+                <h2 id="resultTitle"></h2>
+              </div>
+              <button id="copyButton" class="text-button" type="button">Copy result</button>
+            </div>
+            <div id="decisionBanner" class="decision-banner"></div>
+            <div id="metricGrid" class="metric-grid"></div>
+            <div class="chart-wrap">
+              <canvas id="resultChart" aria-label="Experiment result chart"></canvas>
+            </div>
+            <div id="methodNote" class="method-note"></div>
+          </div>
+        </section>
+      </section>
+
+      <section class="methodology">
+        <div>
+          <span class="step-label">Methodology</span>
+          <h2>Designed to support judgment, not replace it.</h2>
+        </div>
+        <div class="method-cards">
+          <article>
+            <span>01</span>
+            <h3>Check assignment first</h3>
+            <p>A significant SRM is a data-quality warning. Investigate it before reading outcomes.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>Read the interval</h3>
+            <p>The effect and its confidence interval are more informative than a binary p-value label.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Decide practical value</h3>
+            <p>Statistical evidence does not determine whether an effect matters to your product.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Built by Pavel Fomin</span>
+      <span>Calculations stay on your device.</span>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
+
