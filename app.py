@@ -18,6 +18,12 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/healthz')
+def healthz():
+    """Health check used by Render during deploys."""
+    return jsonify({'status': 'ok'})
+
+
 @app.route('/calculate', methods=['POST'])
 def calculate():
     """
