@@ -1,0 +1,40 @@
+name: Bug report
+description: Report reproducible incorrect behavior.
+title: "[Bug] "
+body:
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Include the page, inputs, and actions in order.
+      placeholder: "1. Open ...\n2. Enter ...\n3. Submit ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include error messages or screenshots, with sensitive data removed.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Production or local? Browser/device and Python version when relevant.
+      placeholder: "Render production / local; browser and OS; version if known."
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification
+      description: What specific steps would show that the bug is fixed?
+    validations:
+      required: true

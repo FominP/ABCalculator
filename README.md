@@ -101,5 +101,10 @@ ABCalculator/
 
 Основная логика тестов реализована в [ab_test_analyzer](https://github.com/FominP/ABTestAnalyzer), созданной автором.
 
+## 🤝 Вклад в проект
+
+Правила работы с задачами, ветками и pull request описаны в [CONTRIBUTING.md](CONTRIBUTING.md).
+Инструкции по устройству Flask-приложения и проверкам — в [AGENTS.md](AGENTS.md).
+
 ## 📄 Лицензия
 Этот проект распространяется под лицензией MIT.
