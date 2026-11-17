@@ -23,7 +23,16 @@ python -m pip install -r requirements.txt
 python app.py
 ```
 
-Visit `http://127.0.0.1:5000/`. There is **no automated Flask test suite in this repository yet**; do not report `unittest discover` finding zero tests as a passed suite. After installing dependencies, run this targeted smoke check when relevant:
+Visit `http://127.0.0.1:5000/`. Browser smoke tests live in `tests/e2e` and
+start Flask automatically on a free local port. Install and run them with:
+
+```bash
+python -m pip install -r requirements.txt -r requirements-dev.txt
+python -m playwright install chromium
+python -m pytest tests/e2e
+```
+
+For a faster targeted Flask check when browser coverage is not relevant, use:
 
 ```bash
 python - <<'PY'
