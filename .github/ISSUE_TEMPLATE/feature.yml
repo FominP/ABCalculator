@@ -1,0 +1,74 @@
+name: Feature / task
+description: Plan a focused improvement or repository task.
+title: "[Task] "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What outcome should this issue deliver?
+      placeholder: Describe the desired end state.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: What problem or need does this address?
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List observable, verifiable completion conditions.
+      placeholder: "- [ ] First outcome\n- [ ] Second outcome"
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+      description: What should not be changed?
+      placeholder: "None, or list exclusions."
+    validations:
+      required: false
+  - type: textarea
+    id: test_plan
+    attributes:
+      label: Test plan
+      description: How will the result be checked?
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Link prerequisite issues or write "None".
+    validations:
+      required: false
+  - type: dropdown
+    id: size
+    attributes:
+      label: Size
+      description: Rough effort estimate.
+      options:
+        - XS
+        - S
+        - M
+        - L
+        - XL
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: P0 is most urgent; P3 is lowest.
+      options:
+        - P0
+        - P1
+        - P2
+        - P3
+    validations:
+      required: true
