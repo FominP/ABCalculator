@@ -79,17 +79,50 @@ python app.py
 ```
 Откройте браузер и перейдите на http://127.0.0.1:5000.
 
+## 🧪 Браузерные smoke-тесты
+
+Smoke-тесты запускают Flask на свободном локальном порту и проверяют основные
+сценарии в Chromium. Сервис Render для обычного тестового запуска не используется.
+
+```bash
+python -m pip install -r requirements.txt -r requirements-dev.txt
+python -m playwright install chromium
+python -m pytest tests/e2e
+```
+
+В GitHub Actions эти тесты автоматически выполняются для каждого pull request.
+
+После развёртывания можно дополнительно проверить основные элементы production UI.
+Проверка необязательна и может ждать холодного старта бесплатного Render-сервиса.
+
+Windows (PowerShell):
+
+```powershell
+$env:PLAYWRIGHT_BASE_URL = "https://abcalculator.onrender.com"
+python -m pytest tests/e2e/test_browser_smoke.py -k home_page
+Remove-Item Env:PLAYWRIGHT_BASE_URL
+```
+
+Linux / macOS:
+
+```bash
+PLAYWRIGHT_BASE_URL=https://abcalculator.onrender.com \
+  python -m pytest tests/e2e/test_browser_smoke.py -k home_page
+```
+
 ## 🧱 Структура проекта
 ```text
 ABCalculator/
 ├── app.py                 # Основное Flask-приложение
 ├── requirements.txt       # Зависимости Python
+├── requirements-dev.txt   # Зависимости browser-тестов
 ├── render.yaml            # Конфигурация деплоя на Render
 ├── templates/
 │   └── index.html         # Главная страница (Bootstrap 5, Chart.js)
-└── static/
-    ├── style.css          # Дополнительные стили
-    └── script.js          # Клиентская логика (динамические формы, fetch-запросы)
+├── static/
+│   ├── style.css          # Дополнительные стили
+│   └── script.js          # Клиентская логика (динамические формы, fetch-запросы)
+└── tests/e2e/             # Playwright smoke-тесты
 ```
 ## 📚 Используемые библиотеки
 - Flask — веб-фреймворк
