@@ -64,10 +64,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // DOM элементы
     const testTypeSelect = document.getElementById('testType');
     const testDescription = document.getElementById('testDescription');
+    const calculatorForm = document.getElementById('calculatorForm');
     const dynamicFields = document.getElementById('dynamicFields');
     const calculateBtn = document.getElementById('calculateBtn');
     const exampleBtn = document.getElementById('exampleBtn');
-    const resetBtn = document.getElementById('resetBtn');
     const resultCard = document.getElementById('resultCard');
     const resultBody = document.getElementById('resultBody');
     const copyBtn = document.getElementById('copyBtn');
@@ -95,14 +95,21 @@ document.addEventListener('DOMContentLoaded', function() {
             const input = document.createElement('input');
             input.type = field.type;
             input.id = field.id;
+            input.name = field.id;
             input.className = 'form-control';
             if (field.min !== undefined) input.min = field.min;
             if (field.max !== undefined) input.max = field.max;
             if (field.step) input.step = field.step;
             if (field.value !== undefined) input.value = field.value;
             input.required = field.required || false;
+            const feedback = document.createElement('div');
+            feedback.id = `${field.id}-feedback`;
+            feedback.className = 'invalid-feedback';
+            feedback.textContent = `Поле «${field.label}» обязательно для заполнения.`;
+            input.setAttribute('aria-describedby', feedback.id);
             div.appendChild(label);
             div.appendChild(input);
+            div.appendChild(feedback);
             dynamicFields.appendChild(div);
         });
 
@@ -136,11 +143,17 @@ document.addEventListener('DOMContentLoaded', function() {
         config.fields.forEach(field => {
             const input = document.getElementById(field.id);
             if (input) {
+                input.classList.remove('is-invalid');
+                input.removeAttribute('aria-invalid');
                 let value = input.value.trim();
                 if (value === '') {
                     // Если поле необязательное, пропускаем (MDE n_test)
                     if (!field.required) return;
-                    throw new Error(`Поле "${field.label}" обязательно для заполнения.`);
+                    input.classList.add('is-invalid');
+                    input.setAttribute('aria-invalid', 'true');
+                    const error = new Error(`Поле «${field.label}» обязательно для заполнения.`);
+                    error.input = input;
+                    throw error;
                 }
                 params[field.id] = value;
             }
@@ -149,13 +162,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Отображение ошибки
-    function showError(message) {
+    function showError(message, input = null) {
         errorAlert.textContent = message;
         errorAlert.classList.remove('d-none');
+        if (input) {
+            input.focus();
+        } else {
+            errorAlert.focus();
+        }
     }
 
     function hideError() {
         errorAlert.classList.add('d-none');
+        errorAlert.textContent = '';
     }
 
     // Показ/скрытие результатов
@@ -203,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         resultBody.innerHTML = html;
         resultCard.classList.remove('d-none');
+        resultCard.focus();
     }
 
     // Построение графика, если есть данные
@@ -268,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             params = gatherParams();
         } catch (e) {
-            showError(e.message);
+            showError(e.message, e.input);
             return;
         }
 
@@ -320,15 +340,24 @@ document.addEventListener('DOMContentLoaded', function() {
         navigator.clipboard.writeText(text).then(() => {
             const origText = copyBtn.innerHTML;
             copyBtn.innerHTML = '✅ Скопировано!';
-            setTimeout(() => { copyBtn.innerHTML = origText; }, 1500);
+            copyBtn.setAttribute('aria-label', 'Результат скопирован');
+            setTimeout(() => {
+                copyBtn.innerHTML = origText;
+                copyBtn.removeAttribute('aria-label');
+            }, 1500);
         }).catch(() => alert('Не удалось скопировать.'));
     }
 
     // Привязка событий
     testTypeSelect.addEventListener('change', updateForm);
     exampleBtn.addEventListener('click', fillExample);
-    resetBtn.addEventListener('click', resetForm);
-    calculateBtn.addEventListener('click', calculate);
+    calculatorForm.addEventListener('reset', () => {
+        window.setTimeout(resetForm, 0);
+    });
+    calculatorForm.addEventListener('submit', event => {
+        event.preventDefault();
+        calculate();
+    });
     copyBtn.addEventListener('click', copyResult);
 
     // Инициализация формы при загрузке
