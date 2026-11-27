@@ -74,12 +74,13 @@ python -m pytest
 
 | File | Coverage |
 | --- | --- |
+| [`tests/test_flask_smoke.py`](tests/test_flask_smoke.py) | Fast Flask test-client checks for `/`, `/healthz`, and valid example payloads for all five calculation modes. |
 | [`tests/test_privacy.py`](tests/test_privacy.py) | Flask test client checks that experiment input and result markers do not reach Python logs, stdout, or stderr. Runs without a browser. |
 | [`tests/e2e/conftest.py`](tests/e2e/conftest.py) | Starts Flask on a free local port, waits for `/healthz`, and provides isolated Chromium contexts. Set `PLAYWRIGHT_BASE_URL` to target a running deployment. |
 | [`tests/e2e/test_browser_smoke.py`](tests/e2e/test_browser_smoke.py) | Checks all five forms, a real two-proportion submission and chart, invalid input, malformed responses, and the 390 px layout. |
 | [`tests/e2e/test_accessibility.py`](tests/e2e/test_accessibility.py) | Runs axe-core on the initial and result views and checks keyboard operation, field labels, validation messages, and live regions. |
 
-For a quick server-side check, run `python -m pytest tests/test_privacy.py`. The [pull request workflow](.github/workflows/browser-tests.yml) runs the browser suite and a separate Lighthouse audit against local Flask. The [production workflow](.github/workflows/production-quality.yml) warms up Render before running its scheduled or manually triggered audit.
+For a quick server-side check, run `python -m pytest tests/test_flask_smoke.py tests/test_privacy.py`. The [Flask smoke workflow](.github/workflows/flask-smoke.yml) runs for pull requests and pushes to `main`. The [browser workflow](.github/workflows/browser-tests.yml) runs the browser suite and a separate Lighthouse audit against local Flask. The [production workflow](.github/workflows/production-quality.yml) warms up Render before running its scheduled or manually triggered audit.
 
 ## Deploy to Render
 
