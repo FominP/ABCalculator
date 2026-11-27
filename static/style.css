@@ -3,6 +3,43 @@ body {
     padding-bottom: 3rem;
 }
 
+.skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 1100;
+    padding: 0.75rem 1rem;
+    background: #fff;
+    color: #052c65;
+    border: 2px solid #0d6efd;
+    border-radius: 0.375rem;
+}
+
+.text-muted,
+.form-text {
+    color: #545b62 !important;
+}
+
+.btn-outline-secondary {
+    color: #4f575e;
+    border-color: #4f575e;
+}
+
+.btn-outline-danger {
+    color: #a61e2c;
+    border-color: #a61e2c;
+}
+
+.btn-outline-primary {
+    color: #0756b9;
+    border-color: #0756b9;
+}
+
+:focus-visible {
+    outline: 3px solid #ffbf47;
+    outline-offset: 3px;
+}
+
 #testDescription {
     font-style: italic;
 }

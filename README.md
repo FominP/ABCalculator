@@ -110,6 +110,49 @@ PLAYWRIGHT_BASE_URL=https://abcalculator.onrender.com \
   python -m pytest tests/e2e/test_browser_smoke.py -k home_page
 ```
 
+## ♿ Проверки доступности и качества
+
+Browser-набор включает axe-core и проверяет стартовое и результирующее состояния
+калькулятора. Сборка завершается с ошибкой, если найдены нарушения уровня
+`critical` или `serious`. Отдельные Playwright-сценарии проверяют работу основной
+формы только с клавиатуры, связи динамических полей с подписями и сообщениями
+валидации, а также live-region для результата и серверной ошибки.
+
+```bash
+python -m pip install -r requirements.txt -r requirements-dev.txt
+python -m playwright install chromium
+python -m pytest tests/e2e
+```
+
+Для ручной проверки пройдите по форме клавишами `Tab` и `Shift+Tab`, заполните и
+отправьте её клавишей `Enter`, затем убедитесь, что фокус заметен и переходит к
+результату. Повторите сценарий с пустым обязательным полем и с ошибочным значением,
+проверьте объявление ошибки экранным диктором. Axe и Lighthouse не заменяют такую
+ручную проверку или полноценное тестирование со вспомогательными технологиями.
+
+Lighthouse CI запускается в pull request против локального Flask-приложения и
+сохраняет HTML/JSON-отчёт в артефакте `lighthouse-local-report`. Начальные пороги:
+
+| Категория | Минимальный балл |
+| --- | ---: |
+| Performance | 0.75 |
+| Accessibility | 0.95 |
+| Best Practices | 0.90 |
+| SEO | 0.90 |
+
+Локальный запуск требует Node.js с npm и установленный Lighthouse CI:
+
+```bash
+npm install --global @lhci/cli@0.15.1
+lhci autorun --config=lighthouserc.json
+```
+
+Workflow `Production accessibility and quality spot check` запускается отдельно по
+расписанию или вручную. Перед аудитом он прогревает `/healthz` с повторами, чтобы
+учесть холодный старт Render. Его сбой не блокирует pull request; performance в
+production имеет уровень предупреждения, а остальные пороги остаются обязательными.
+Отчёт сохраняется как `lighthouse-production-report`.
+
 ## 🧱 Структура проекта
 ```text
 ABCalculator/
